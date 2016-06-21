@@ -4,6 +4,9 @@ from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
 from pymongo import MongoClient
 import json
 import uuid
+from .forms import newsForm
+from django.conf import settings
+import os
 # Create your views here.
 def testFunction(request):
     cli = MongoClient()
@@ -39,21 +42,40 @@ def page4(request):
 def page5(request):
     return render_to_response("detail_list4.html")
 
-def insertdata(request):
-    print "hello"
-    return render_to_response('insert.html')
+# def insertdata(request):
+#     print "hello"
+#     return render_to_response('insert.html')
 
 
 def insertdotas(request):
-    print "helloji"
-    data = json.loads(request.body)
-    uui = uuid.uuid4()
-    print str(uui)
-    data["nid"] = str(uui)
-    print data
-    cli = MongoClient()
-    db = cli["projectsite"]
-    collection = db["news"]
-    collection.insert(data)
-
-    return HttpResponse("success")
+    if request.method == "POST":
+        form = newsForm(request.POST, request.FILES)
+        heading = request.POST.get("heading")
+        desc = request.POST.get("description")
+        uui = uuid.uuid4()
+        data = {'heading':heading, 'description':desc, 'newsid':str(uui)}
+        if form.is_valid():
+            print "hello"
+            f = request.FILES['fileform']
+            print f.name
+            filename = f.name
+            ext = filename.split(".")[-1]
+            
+            filename = str(uui)+"."+ext
+            with open(settings.IMAGE_URL+filename,"w") as fr:
+                for i in f.chunks():
+                    fr.writelines(i)
+            data['photo'] = filename
+            cli = MongoClient()
+            db = cli["projectsite"]
+            collection = db["news"]
+            collection.insert(data)
+            
+            return HttpResponse("Success")
+    
+    else:
+        form = newsForm()
+        
+    return render(request,"insert.html", {"forms":form})
+    
+  

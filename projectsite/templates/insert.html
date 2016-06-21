@@ -12,23 +12,27 @@
 
 
 <div class="col-lg-6">
-<form id = "insertdata">
-<div class = "form-group">
+<form id = "insertdata" action="/projectsite/insertdata" method="post" enctype="multipart/form-data">
+<!-- <div class = "form-group">
 	<label for="inputEmail3" class="col-sm-2 control-label">Heading</label>
 	<input type="text" class="form-control" id = "heading" name = "heading" placeholder="Text input">
 </div>
-<!-- <div class="form-group">
+<div class="form-group">
     <label for="exampleInputFile">File input</label>
     <input type="file" id="exampleInputFile" name = "image" enctype="multipart/form-data">
     <p class="help-block">Example block-level help text here.</p>
-</div> -->
+</div>
 <div class="form-group">
 	<label for="exampleInputFile">File input</label>
 	<textarea class="form-control" rows="8" name = "description" id = "description"></textarea>
 </div>
 
-</form>
-<button class="btn btn-success" id = "sbtbutton"> Submit </button>
+ -->
+ 
+ 	{{ forms.as_p }}
+	<button class="btn btn-success" id = "sbtbuttonmm"> Submit </button>
+ </form>
+
 </div>
 
 <script>
